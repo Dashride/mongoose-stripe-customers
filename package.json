@@ -5,8 +5,8 @@
   "main": "mongoose-stripe-customers.js",
   "scripts": {
     "test": "gulp test",
-    "cover": "gulp cover",
-    "travis": "npm run cover -s && ((cat coverage/lcov.info | coveralls) || exit 0)"
+    "coveralls": "gulp coveralls",
+    "travis": "npm run coveralls -s && ((cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js) || exit 0)"
   },
   "repository": {
     "type": "git",
@@ -29,11 +29,12 @@
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-istanbul": "^0.10.0",
-    "gulp-jasmine": "^2.0.1",
     "gulp-jsdoc-to-markdown": "^1.1.1",
     "gulp-jshint": "^1.11.2",
+    "gulp-mocha": "^2.1.3",
     "gulp-util": "^3.0.6",
     "jshint-stylish": "^2.0.1",
+    "mocha": "^2.2.5",
     "mongoose": "^4.1.2"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
 var fs = require('fs'),
     gulp = require('gulp'),
     gutil = require("gulp-util"),
-    jasmine = require('gulp-jasmine'),
+    mocha = require('gulp-mocha'),
     istanbul = require('gulp-istanbul'),
     jshint = require('gulp-jshint'),
     jsdoc2md = require('gulp-jsdoc-to-markdown'),
@@ -15,47 +15,55 @@ var paths = {
 
 gulp.task('watch', ['test'], function (done) {
     var glob = paths.all;
-    gulp.watch(glob, ['test']);
+    return gulp.watch(glob, ['test']);
 });
 
 gulp.task('lint', function() {
-    gulp.src(paths.all)
+    return gulp.src(paths.all)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('cover', function(done) {
-    gulp.src(paths.js)
+gulp.task('coveralls', function(done) {
+    return gulp.src(paths.js)
         .pipe(istanbul())
         .pipe(istanbul.hookRequire())
         .on('finish', function() {
-            gulp.src(paths.specs)
-                .pipe(jasmine({
-                    verbose: true,
-                    includeStackTrace: true
+            return gulp.src(paths.specs)
+                .pipe(mocha({
+                    reporter: 'spec'
                 }))
                 .pipe(istanbul.writeReports({
                     reporters: [ 'lcovonly', 'text' ],
+                }));
+        });
+});
+
+gulp.task('coverage', function(done) {
+    return gulp.src(paths.js)
+        .pipe(istanbul())
+        .pipe(istanbul.hookRequire())
+        .on('finish', function() {
+            return gulp.src(paths.specs)
+                .pipe(mocha({
+                    reporter: 'spec'
                 }))
-                .pipe(istanbul.enforceThresholds({
-                    thresholds: { global: 90 }
-                }))
-                .on('end', done);
-        })
-        .on('error', done);
+                .pipe(istanbul.writeReports({
+                    reporters: [ 'text', 'html' ],
+                }));
+        });
 });
 
 gulp.task('test', ['lint'], function(done) {
-    gulp.src(paths.specs)
-     .pipe(jasmine({
-         verbose: true,
-         includeStackTrace: true
-     }));
+    return gulp.src(paths.specs)
+        .pipe(mocha({
+            reporter: 'spec'
+        }));
 });
 
 gulp.task('docs', function() {
-    gulp.src(paths.all)
+    return gulp.src(paths.all)
         .pipe(concat('README.md'))
         .pipe(jsdoc2md({template: fs.readFileSync('./readme.hbs', 'utf8')}))
         .on('error', function(err){

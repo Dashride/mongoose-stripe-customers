@@ -21,12 +21,6 @@ schema.plugin(authPlugin, {
  */
 
 module.exports = function stripeCustomersPlugin(schema, options) {
-    if(!options.stripeApiKey) {
-        throw new Error('Stripe API key must be provided to mongoose-stripe-customers.');
-    }
-
-    var stripe = require('stripe')(options.stripeApiKey);
-
     /**
      * @param {object} options
      * @param {string} options.stripeApiKey - The Stripe secret key used to access the Stripe API.
@@ -43,6 +37,12 @@ module.exports = function stripeCustomersPlugin(schema, options) {
         stripeCustomerIdField: 'stripe_customer_id'
     }, options || {});
 
+    if(!options.stripeApiKey) {
+        throw new Error('Stripe API key must be provided to mongoose-stripe-customers.');
+    }
+
+    var stripe = require('stripe')(options.stripeApiKey);
+
     // Add the stripe customer id path to the schema.
     if(!schema.path(options.stripeCustomerIdField)) {
         schema.path(options.stripeCustomerIdField, {
@@ -58,7 +58,7 @@ module.exports = function stripeCustomersPlugin(schema, options) {
         var doc = this;
 
         // If the document is new, or the document doesn't have a stripe customer yet, create one.
-        if(doc.isNew || !doc[options.stripeCustomerIdField]) {
+        if(doc.isNew) {
             var customer = {
                 metadata: {}
             };
@@ -88,9 +88,7 @@ module.exports = function stripeCustomersPlugin(schema, options) {
                 .then(function(customer) {
                     doc[options.stripeCustomerIdField] = customer.id;
                     done();
-                }, function(err) {
-                    done(err);
-                });
+                }, done);
 
         // They already are a stripe customer, do nothing.
         } else {
