@@ -1,5 +1,7 @@
 mongoose-stripe-customers
 ====================
+[![Build Status](https://travis-ci.org/Dashride/mongoose-stripe-customers.svg?branch=master)](https://travis-ci.org/Dashride/mongoose-stripe-customers)
+[![Dependency Status](https://david-dm.org/Dashride/mongoose-stripe-customers.svg)](https://david-dm.org/Dashride/mongoose-stripe-customers)
 
 A [mongoose.js](https://github.com/LearnBoost/mongoose/) A mongoose plugin that creates a stripe customer when a new document is created and stores the [Stripe](https://stripe.com) customer ID to that document.
 
