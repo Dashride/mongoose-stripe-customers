@@ -1,0 +1,39 @@
+{
+  "name": "mongoose-stripe-customers",
+  "version": "0.1.0",
+  "description": "A mongoose plugin that creates a stripe customer when a new document is created and stores the Stripe customer id to that document.",
+  "main": "mongoose-stripe-customers.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dashride/mongoose-stripe-customers"
+  },
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "stripe",
+    "customer"
+  ],
+  "author": "Joseph Thibeault <joe@dashride.com>",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/Dashride/mongoose-stripe-customers/issues"
+  },
+  "homepage": "https://github.com/Dashride/mongoose-stripe-customers",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-jsdoc-to-markdown": "^1.1.1",
+    "gulp-jshint": "^1.11.2",
+    "gulp-util": "^3.0.6",
+    "jshint-stylish": "^2.0.1",
+    "mongoose": "^4.1.2"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "stripe": "^3.7.0"
+  }
+}

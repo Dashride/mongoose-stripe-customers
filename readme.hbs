@@ -1,0 +1,19 @@
+mongoose-stripe-customers
+====================
+
+A [mongoose.js](https://github.com/LearnBoost/mongoose/) A mongoose plugin that creates a stripe customer when a new document is created and stores the [Stripe](https://stripe.com) customer ID to that document.
+
+## Use Case
+If you are running an ecommerce type application using Stripe and create your own customer/user database objects, as well as Stripe customer objects, use this plugin to simultaneously aggregate your customer information to Stripe when a new customer is created within your database.
+
+This plugin is configurable to allow enough flexibility to work with various schema setups. Just provide the names of your fields such as `email` or `phone` and the plugin will map those over to Stripe meta data objects.
+
+## Installation
+
+`npm install --save mongoose-stripe-customers`
+
+## API Reference
+{{#module name="mongoose-stripe-customers"~}}
+{{>body~}}
+{{>members~}}
+{{/module}}
