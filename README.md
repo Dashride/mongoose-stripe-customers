@@ -23,7 +23,7 @@ var mongooseStripeCustomers = require('mongoose-stripe-customers');
 
 var schema = Schema({...});
 
-schema.plugin(authPlugin, {
+schema.plugin(mongooseStripeCustomers, {
     stripeApiKey: 'XXXXXXXXXXXXXXXX',
     hook: 'save',
     firstNameField: 'first_name',

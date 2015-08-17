@@ -1,6 +1,6 @@
 {
   "name": "mongoose-stripe-customers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A mongoose plugin that creates a stripe customer when a new document is created and stores the Stripe customer id to that document.",
   "main": "mongoose-stripe-customers.js",
   "scripts": {
