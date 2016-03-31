@@ -77,8 +77,10 @@ module.exports = function stripeCustomersPlugin(schema, options) {
             lastName = doc.get(options.lastNameField);
 
             customer.description = firstName + ' ' + lastName;
-            _.set(customer.metadata, options.firstNameField, firstName);
-            _.set(customer.metadata, options.lastNameField, lastName);
+
+            // Don't set via embedded path but as string for stripe metadata
+            customer.metadata[options.firstNameField] = firstName;
+            customer.metadata[options.lastNameField] = lastName;
         }
 
         if(options.metaData instanceof Array && options.metaData.length) {
