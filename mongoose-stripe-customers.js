@@ -69,7 +69,7 @@ module.exports = function stripeCustomersPlugin(schema, options) {
 
         // If the document is new, or the document doesn't have a stripe customer yet, create one.
         if(options.emailField) {
-            customer.description = customer.email = doc.get(options.emailField]);
+            customer.description = customer.email = doc.get(options.emailField);
         }
 
         if(options.firstNameField && options.lastNameField) {
