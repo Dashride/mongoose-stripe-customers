@@ -1,5 +1,5 @@
-var _ = require('lodash'),
-    util = require('util');
+var _ = require('lodash');
+var util = require('util');
 
 /**
  * @module mongoose-stripe-customers
@@ -56,44 +56,46 @@ module.exports = function stripeCustomersPlugin(schema, options) {
         next();
 
         var doc = this;
+        var customer = {
+            metadata: {}
+        };
+        var firstName;
+        var lastName;
+
+        if(!doc.isNew) {
+            // They already are a stripe customer, do nothing.
+            return done();
+        }
 
         // If the document is new, or the document doesn't have a stripe customer yet, create one.
-        if(doc.isNew) {
-            var customer = {
-                metadata: {}
-            };
-
-            if(options.emailField) {
-                customer.email = doc[options.emailField];
-                customer.description = customer.email;
-            }
-
-            if(options.firstNameField && options.lastNameField) {
-                var firstName = doc[options.firstNameField],
-                    lastName = doc[options.lastNameField];
-                customer.description = firstName + ' ' + lastName;
-                customer.metadata[options.firstNameField] = firstName;
-                customer.metadata[options.lastNameField] = lastName;
-            }
-
-            if(options.metaData instanceof Array && options.metaData.length) {
-                options.metaData.forEach(function(key) {
-                    if(doc[key]) {
-                        customer.metadata[key] = (key === '_id') ? doc[key].toString() : doc[key];
-                    }
-                });
-            }
-
-            stripe.customers.create(customer)
-                .then(function(customer) {
-                    doc[options.stripeCustomerIdField] = customer.id;
-                    done();
-                }, done);
-
-        // They already are a stripe customer, do nothing.
-        } else {
-            done();
+        if(options.emailField) {
+            customer.description = customer.email = doc.get(options.emailField);
         }
+
+        if(options.firstNameField && options.lastNameField) {
+            firstName = doc.get(options.firstNameField);
+            lastName = doc.get(options.lastNameField);
+
+            customer.description = firstName + ' ' + lastName;
+            _.set(customer.metadata, options.firstNameField, firstName);
+            _.set(customer.metadata, options.lastNameField, lastName);
+        }
+
+        if(options.metaData instanceof Array && options.metaData.length) {
+            options.metaData.forEach(function(key) {
+                var val = doc.get(key);
+
+                if(val) {
+                    _.set(customer.metadata, key, (key === '_id') ? val.toString() : val);
+                }
+            });
+        }
+
+        stripe.customers.create(customer)
+            .then(function(customer) {
+                doc.set(options.stripeCustomerIdField, customer.id);
+                done();
+            }, done);
     });
 
 };
