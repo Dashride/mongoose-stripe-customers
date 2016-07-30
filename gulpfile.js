@@ -58,7 +58,8 @@ gulp.task('coverage', function(done) {
 gulp.task('test', ['lint'], function(done) {
     return gulp.src(paths.specs)
         .pipe(mocha({
-            reporter: 'spec'
+            reporter: 'spec',
+            timeout: 10000,
         }));
 });
 
