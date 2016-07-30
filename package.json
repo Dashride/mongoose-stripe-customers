@@ -29,7 +29,7 @@
     "coveralls": "^2.11.4",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
-    "gulp-istanbul": "^0.10.2",
+    "gulp-istanbul": "^1.0.0",
     "gulp-jsdoc-to-markdown": "^1.1.1",
     "gulp-jshint": "^2.0.1",
     "gulp-mocha": "^2.1.3",
