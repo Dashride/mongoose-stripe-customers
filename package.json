@@ -36,7 +36,7 @@
     "gulp-util": "^3.0.7",
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.0.1",
-    "mocha": "^2.3.3",
+    "mocha": "^2.5.2",
     "mongoose": "^4.4.16"
   },
   "dependencies": {
