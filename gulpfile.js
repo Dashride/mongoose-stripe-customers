@@ -32,7 +32,8 @@ gulp.task('coveralls', function(done) {
         .on('finish', function() {
             return gulp.src(paths.specs)
                 .pipe(mocha({
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 10000,
                 }))
                 .pipe(istanbul.writeReports({
                     reporters: [ 'lcovonly', 'text' ],
