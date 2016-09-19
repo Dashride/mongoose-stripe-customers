@@ -40,7 +40,7 @@
     "mongoose": "^4.5.4"
   },
   "dependencies": {
-    "lodash": "^4.13.1",
+    "lodash": "^4.16.0",
     "stripe": "^4.6.0"
   }
 }
