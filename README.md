@@ -1,5 +1,7 @@
 mongoose-stripe-customers
 ====================
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Dashride/mongoose-stripe-customers.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/Dashride/mongoose-stripe-customers.svg?branch=master)](https://travis-ci.org/Dashride/mongoose-stripe-customers)
 [![Coverage Status](https://coveralls.io/repos/Dashride/mongoose-stripe-customers/badge.svg?branch=master&service=github)](https://coveralls.io/github/Dashride/mongoose-stripe-customers?branch=master)
 [![Dependency Status](https://david-dm.org/Dashride/mongoose-stripe-customers.svg)](https://david-dm.org/Dashride/mongoose-stripe-customers)
