@@ -1,5 +1,6 @@
+'use strict';
+
 var _ = require('lodash');
-var util = require('util');
 
 /**
  * @module mongoose-stripe-customers
@@ -37,14 +38,14 @@ module.exports = function stripeCustomersPlugin(schema, options) {
         stripeCustomerIdField: 'stripe_customer_id'
     }, options || {});
 
-    if(!options.stripeApiKey) {
+    if (!options.stripeApiKey) {
         throw new Error('Stripe API key must be provided to mongoose-stripe-customers.');
     }
 
     var stripe = require('stripe')(options.stripeApiKey);
 
     // Add the stripe customer id path to the schema.
-    if(!schema.path(options.stripeCustomerIdField)) {
+    if (!schema.path(options.stripeCustomerIdField)) {
         schema.path(options.stripeCustomerIdField, {
             type: String,
             unique: true,
@@ -52,27 +53,33 @@ module.exports = function stripeCustomersPlugin(schema, options) {
         });
     }
 
+    schema.method('setStandaloneStripeKey', function(key) {
+        this._stripeStandaloneApiKey = key;
+        return this;
+    });
+
     schema.pre(options.hook, true, function createStripeCustomer(next, done) {
         next();
 
         var doc = this;
+        var stripeApiKey = (doc._stripeStandaloneApiKey) ? doc._stripeStandaloneApiKey : options.stripeApiKey;
         var customer = {
             metadata: {}
         };
         var firstName;
         var lastName;
 
-        if(!doc.isNew) {
+        if (!doc.isNew) {
             // They already are a stripe customer, do nothing.
             return done();
         }
 
         // If the document is new, or the document doesn't have a stripe customer yet, create one.
-        if(options.emailField) {
+        if (options.emailField) {
             customer.description = customer.email = doc.get(options.emailField);
         }
 
-        if(options.firstNameField && options.lastNameField) {
+        if (options.firstNameField && options.lastNameField) {
             firstName = doc.get(options.firstNameField);
             lastName = doc.get(options.lastNameField);
 
@@ -83,21 +90,22 @@ module.exports = function stripeCustomersPlugin(schema, options) {
             customer.metadata[options.lastNameField] = lastName;
         }
 
-        if(options.metaData instanceof Array && options.metaData.length) {
+        if (options.metaData instanceof Array && options.metaData.length) {
             options.metaData.forEach(function(key) {
                 var val = doc.get(key);
 
-                if(val) {
+                if (val) {
                     _.set(customer.metadata, key, (key === '_id') ? val.toString() : val);
                 }
             });
         }
 
-        stripe.customers.create(customer)
-            .then(function(customer) {
-                doc.set(options.stripeCustomerIdField, customer.id);
-                done();
-            }, done);
+        stripe.customers.create(customer, {
+            api_key: stripeApiKey
+        }).then(function(customer) {
+            doc.set(options.stripeCustomerIdField, customer.id);
+            done();
+        }, done);
     });
 
 };
