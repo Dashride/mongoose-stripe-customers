@@ -1,0 +1,22 @@
+{
+  "esnext": true,
+  "undef": true,
+  "unused": "vars",
+  "strict": false,
+  "node": true,
+  "mocha": true,
+  "expr": true,
+  "predef": [
+      "module",
+      "require",
+      "process",
+      "describe",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "console",
+      "setTimeout"
+  ]
+}

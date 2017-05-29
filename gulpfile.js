@@ -1,11 +1,11 @@
-var fs = require('fs'),
-    gulp = require('gulp'),
-    gutil = require("gulp-util"),
-    mocha = require('gulp-mocha'),
-    istanbul = require('gulp-istanbul'),
-    jshint = require('gulp-jshint'),
-    jsdoc2md = require('gulp-jsdoc-to-markdown'),
-    concat = require("gulp-concat");
+var fs = require('fs');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var mocha = require('gulp-mocha');
+var istanbul = require('gulp-istanbul');
+var jshint = require('gulp-jshint');
+var jsdoc2md = require('gulp-jsdoc-to-markdown');
+var concat = require('gulp-concat');
 
 var paths = {
     js: ['./**/*.js', '!./**/*.spec.js', '!./coverage/**/*.js', '!./node_modules/**/*.js'],
@@ -36,7 +36,7 @@ gulp.task('coveralls', function(done) {
                     timeout: 10000,
                 }))
                 .pipe(istanbul.writeReports({
-                    reporters: [ 'lcovonly', 'text' ],
+                    reporters: ['lcovonly', 'text'],
                 }));
         });
 });
@@ -51,7 +51,7 @@ gulp.task('coverage', function(done) {
                     reporter: 'spec'
                 }))
                 .pipe(istanbul.writeReports({
-                    reporters: [ 'text', 'html' ],
+                    reporters: ['text', 'html'],
                 }));
         });
 });
@@ -68,7 +68,7 @@ gulp.task('docs', function() {
     return gulp.src(paths.all)
         .pipe(concat('README.md'))
         .pipe(jsdoc2md({template: fs.readFileSync('./readme.hbs', 'utf8')}))
-        .on('error', function(err){
+        .on('error', function(err) {
             gutil.log('jsdoc2md failed:', err.message);
         })
         .pipe(gulp.dest('.'));

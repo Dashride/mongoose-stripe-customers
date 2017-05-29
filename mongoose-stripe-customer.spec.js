@@ -1,11 +1,13 @@
+'use strict';
+
 var mongoose = require('mongoose');
 var expect = require('chai').expect;
-var fs = require('fs');
 var mongooseStripeCustomers = require('./mongoose-stripe-customers');
 var Schema = mongoose.Schema;
 var connection;
 
 var STRIPE_API_KEY = process.env.STRIPE_TEST_KEY;
+var STRIPE_STANDALONE_KEY = process.env.STRIPE_STANDALONE_KEY;
 
 var stripe = require('stripe')(STRIPE_API_KEY);
 
@@ -52,7 +54,7 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
 
             try {
                 testSchema.plugin(mongooseStripeCustomers);
-            } catch(e) {
+            } catch (e) {
                 errorThrown = true;
             }
 
@@ -85,8 +87,8 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
         });
 
         it('should assign a stripe_customer_id to the model during creation', function() {
-            Customer = connection.model('Customer', testSchema);
-            customer = new Customer({
+            var Customer = connection.model('Customer', testSchema);
+            var customer = new Customer({
                 firstName: 'test',
                 lastName: 'customer',
                 customerType: 'testing',
@@ -102,7 +104,8 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
     });
 
     describe('with default overrides', function() {
-        var testSchema, customer;
+        var testSchema;
+        var customer;
 
         before(function() {
             testSchema = customerSchema();
@@ -112,12 +115,12 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
                 firstNameField: 'firstName',
                 lastNameField: 'lastName',
                 emailField: 'email',
-                metaData: [ 'customerType', 'phone', '_id' ]
+                metaData: ['customerType', 'phone', '_id']
             });
         });
 
         it('should have all override data on the stripe customer', function() {
-            CustomerOverrides = connection.model('CustomerOverrides', testSchema);
+            var CustomerOverrides = connection.model('CustomerOverrides', testSchema);
             customer = new CustomerOverrides({
                 firstName: 'test',
                 lastName: 'customer',
@@ -147,7 +150,7 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
     });
 
     describe('with default overrides', function() {
-        var testSchema, customer;
+        var testSchema;
 
         before(function() {
             testSchema = new Schema({
@@ -165,13 +168,13 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
                 firstNameField: 'name.first',
                 lastNameField: 'name.last',
                 emailField: 'email',
-                metaData: [ 'customerType', 'phone', '_id' ]
+                metaData: ['customerType', 'phone', '_id']
             });
         });
 
         it('should allow override data to be embedded documents on the stripe customer', function() {
-            CustomerEmbedOverrides = connection.model('CustomerEmbedOverrides', testSchema);
-            customer = new CustomerEmbedOverrides({
+            var CustomerEmbedOverrides = connection.model('CustomerEmbedOverrides', testSchema);
+            var customer = new CustomerEmbedOverrides({
                 name: {
                     first: 'test',
                     last: 'customer'
@@ -194,7 +197,8 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
     });
 
     describe('with default overrides', function() {
-        var testSchema, customer;
+        var testSchema;
+        var customer;
 
         before(function() {
             testSchema = customerSchema();
@@ -204,7 +208,7 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
                 firstNameField: 'firstName',
                 lastNameField: 'lastName',
                 emailField: 'email',
-                metaData: [ 'customerType', 'phone', '_id', 'address' ]
+                metaData: ['customerType', 'phone', '_id', 'address']
             });
         });
 
@@ -222,6 +226,49 @@ describe('Mongoose plugin: mongoose-stripe-customers', function() {
                 return stripe.customers.retrieve(savedCustomer.stripeCustomerID);
             }).then(function(stripeCustomer) {
                 expect(stripeCustomer.metadata.address).to.equal(undefined);
+            });
+        });
+    });
+
+    describe('with stripe standalone api key', function() {
+        var testSchema;
+        var Customer;
+
+        before(function() {
+            testSchema = customerSchema();
+            testSchema.plugin(mongooseStripeCustomers, {
+                stripeApiKey: STRIPE_API_KEY
+            });
+            Customer = connection.model('CustomerStandalone', testSchema);
+        });
+
+        it('should set a shadow field on the model', function() {
+            var customer = new Customer({
+                firstName: 'test',
+                lastName: 'customer',
+                customerType: 'testing',
+                phone: '1112223333',
+                email: 'test@testing.com'
+            });
+
+            customer.setStandaloneStripeKey(STRIPE_STANDALONE_KEY);
+            expect(customer._stripeStandaloneApiKey).to.equal(STRIPE_STANDALONE_KEY);
+        });
+
+        it('should create a customer using the api key provided by the shadow field', function() {
+            var customer = new Customer({
+                firstName: 'test',
+                lastName: 'customer',
+                customerType: 'testing',
+                phone: '1112223333',
+                email: 'test@testing.com'
+            });
+
+            customer.setStandaloneStripeKey(STRIPE_STANDALONE_KEY);
+
+            return customer.save().then(function(savedCustomer) {
+                expect(savedCustomer.stripe_customer_id).to.not.equal(undefined);
+                expect(savedCustomer.stripe_customer_id.substr(0, 4)).to.equal('cus_');
             });
         });
     });
