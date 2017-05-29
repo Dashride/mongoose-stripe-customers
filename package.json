@@ -37,10 +37,10 @@
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.0.1",
     "mocha": "^3.0.0",
-    "mongoose": "^4.5.4"
+    "mongoose": "^4.10.4"
   },
   "dependencies": {
     "lodash": "^4.16.1",
-    "stripe": "^4.6.0"
+    "stripe": "^4.13.0"
   }
 }
