@@ -26,7 +26,7 @@
   "homepage": "https://github.com/Dashride/mongoose-stripe-customers",
   "devDependencies": {
     "chai": "^3.4.0",
-    "coveralls": "^2.11.4",
+    "coveralls": "^3.0.1",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-istanbul": "^1.0.0",
